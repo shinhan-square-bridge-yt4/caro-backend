@@ -1,3 +1,5 @@
 spring:
   application:
     name: caro
+  profiles:
+    active: dev
