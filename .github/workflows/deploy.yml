@@ -3,6 +3,16 @@ name: Deploy to EC2
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      ddl_auto:
+        description: '초기 배포 시 테이블 생성 옵션'
+        required: false
+        default: 'validate'
+        type: choice
+        options:
+          - validate
+          - create
 
 permissions:
   contents: read
@@ -60,6 +70,8 @@ jobs:
             export DB_USERNAME=${{ secrets.DB_USERNAME }}
             export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             export DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export DDL_AUTO=${{ github.event.inputs.ddl_auto || 'validate' }}
 
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
