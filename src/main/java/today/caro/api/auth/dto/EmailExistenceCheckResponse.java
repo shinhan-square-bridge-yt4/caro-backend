@@ -1,6 +1,6 @@
 package today.caro.api.auth.dto;
 
-public record EmailExistsResponse(
+public record EmailExistenceCheckResponse(
     boolean exists
 ) {
 }

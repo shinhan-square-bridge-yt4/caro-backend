@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import today.caro.api.common.dto.ApiResponse;
 import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
-import today.caro.api.expense.dto.ExpenseCategoryResponse;
+import today.caro.api.expense.dto.ExpenseCategoryGetResponse;
 import today.caro.api.expense.dto.ExpenseCreateRequest;
 
 import java.util.List;
@@ -57,8 +57,8 @@ public class ExpenseController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공")
     })
     @GetMapping("/categories")
-    public ResponseEntity<ApiResponse<List<ExpenseCategoryResponse>>> getExpenseCategories() {
-        List<ExpenseCategoryResponse> response = expenseCategoryService.getExpenseCategories();
+    public ResponseEntity<ApiResponse<List<ExpenseCategoryGetResponse>>> getExpenseCategories() {
+        List<ExpenseCategoryGetResponse> response = expenseCategoryService.getExpenseCategories();
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

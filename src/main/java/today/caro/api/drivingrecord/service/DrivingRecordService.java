@@ -7,8 +7,8 @@ import today.caro.api.common.exception.BusinessException;
 import today.caro.api.common.exception.ErrorCode;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateRequest;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateResponse;
-import today.caro.api.drivingrecord.dto.DrivingRecordListResponse;
-import today.caro.api.drivingrecord.dto.DrivingRecordPageResponse;
+import today.caro.api.drivingrecord.dto.DrivingRecordGetResponse;
+import today.caro.api.drivingrecord.dto.DrivingRecordPageGetResponse;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.membercar.entity.MemberCar;
@@ -28,7 +28,7 @@ public class DrivingRecordService {
     private final PointCalculationPolicy pointCalculationPolicy;
 
     @Transactional(readOnly = true)
-    public DrivingRecordPageResponse getDrivingRecords(Long memberId, YearMonth yearMonth, Long cursor, int size) {
+    public DrivingRecordPageGetResponse getDrivingRecords(Long memberId, YearMonth yearMonth, Long cursor, int size) {
         YearMonth targetMonth = yearMonth != null ? yearMonth : YearMonth.now();
 
         LocalDate startDate = targetMonth.atDay(1);
@@ -42,11 +42,11 @@ public class DrivingRecordService {
             records = drivingRecordRepository.findByMemberIdAndMonthNoCursor(memberId, startDate, endDate, size);
         }
 
-        List<DrivingRecordListResponse> responseList = records.stream()
-            .map(DrivingRecordListResponse::from)
+        List<DrivingRecordGetResponse> responseList = records.stream()
+            .map(DrivingRecordGetResponse::from)
             .toList();
 
-        return DrivingRecordPageResponse.of(responseList, size);
+        return DrivingRecordPageGetResponse.of(responseList, size);
     }
 
     @Transactional

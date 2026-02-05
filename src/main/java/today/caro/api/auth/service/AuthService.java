@@ -108,9 +108,9 @@ public class AuthService {
         );
     }
 
-    public EmailExistsResponse checkEmailExists(String email) {
+    public EmailExistenceCheckResponse checkEmailExists(String email) {
         boolean exists = memberRepository.existsByEmail(email);
-        return new EmailExistsResponse(exists);
+        return new EmailExistenceCheckResponse(exists);
     }
 
 }

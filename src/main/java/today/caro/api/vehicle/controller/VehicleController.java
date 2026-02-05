@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.caro.api.common.dto.ApiResponse;
 import today.caro.api.common.dto.SuccessCode;
-import today.caro.api.vehicle.dto.VehicleBrandListResponse;
-import today.caro.api.vehicle.dto.VehicleModelListResponse;
+import today.caro.api.vehicle.dto.VehicleBrandGetResponse;
+import today.caro.api.vehicle.dto.VehicleModelGetResponse;
 import today.caro.api.vehicle.service.VehicleService;
 
 import java.util.List;
@@ -31,8 +31,8 @@ public class VehicleController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공")
     })
     @GetMapping("/brands")
-    public ResponseEntity<ApiResponse<List<VehicleBrandListResponse>>> getAllBrands() {
-        List<VehicleBrandListResponse> response = vehicleService.getAllBrands();
+    public ResponseEntity<ApiResponse<List<VehicleBrandGetResponse>>> getAllBrands() {
+        List<VehicleBrandGetResponse> response = vehicleService.getAllBrands();
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));
@@ -44,11 +44,11 @@ public class VehicleController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "리소스를 찾을 수 없음")
     })
     @GetMapping("/brands/{brand-id}/models")
-    public ResponseEntity<ApiResponse<List<VehicleModelListResponse>>> getModelsByBrand(
+    public ResponseEntity<ApiResponse<List<VehicleModelGetResponse>>> getModelsByBrand(
         @PathVariable(name = "brand-id") Long brandId,
         @RequestParam(required = false) String keyword
     ) {
-        List<VehicleModelListResponse> response = vehicleService.getModelsByBrand(brandId, keyword);
+        List<VehicleModelGetResponse> response = vehicleService.getModelsByBrand(brandId, keyword);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

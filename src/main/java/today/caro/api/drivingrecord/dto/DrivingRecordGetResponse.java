@@ -3,7 +3,7 @@ package today.caro.api.drivingrecord.dto;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
 import today.caro.api.drivingrecord.util.DrivingRecordFormatter;
 
-public record DrivingRecordListResponse(
+public record DrivingRecordGetResponse(
     Long id,
     String driveDate,
     String startTime,
@@ -15,8 +15,8 @@ public record DrivingRecordListResponse(
     String vehicleVariantName,
     int earnedPoints
 ) {
-    public static DrivingRecordListResponse from(DrivingRecord record) {
-        return new DrivingRecordListResponse(
+    public static DrivingRecordGetResponse from(DrivingRecord record) {
+        return new DrivingRecordGetResponse(
             record.getId(),
             DrivingRecordFormatter.formatDate(record.getDriveDate()),
             DrivingRecordFormatter.formatTime(record.getStartTime()),

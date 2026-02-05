@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import today.caro.api.auth.dto.EmailExistsResponse;
+import today.caro.api.auth.dto.EmailExistenceCheckResponse;
 import today.caro.api.auth.dto.LoginRequest;
 import today.caro.api.auth.dto.LoginResponse;
 import today.caro.api.auth.dto.TokenReissueRequest;
@@ -103,8 +103,8 @@ public class AuthController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공")
     })
     @GetMapping("/email/exists")
-    public ResponseEntity<ApiResponse<EmailExistsResponse>> checkEmailExists(@RequestParam String email) {
-        EmailExistsResponse response = authService.checkEmailExists(email);
+    public ResponseEntity<ApiResponse<EmailExistenceCheckResponse>> checkEmailExists(@RequestParam String email) {
+        EmailExistenceCheckResponse response = authService.checkEmailExists(email);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

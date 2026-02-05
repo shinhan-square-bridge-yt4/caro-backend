@@ -20,7 +20,7 @@ import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateRequest;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateResponse;
-import today.caro.api.drivingrecord.dto.DrivingRecordPageResponse;
+import today.caro.api.drivingrecord.dto.DrivingRecordPageGetResponse;
 import today.caro.api.drivingrecord.service.DrivingRecordService;
 
 import java.time.YearMonth;
@@ -43,7 +43,7 @@ public class DrivingRecordController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요")
     })
     @GetMapping
-    public ResponseEntity<ApiResponse<DrivingRecordPageResponse>> getDrivingRecords(
+    public ResponseEntity<ApiResponse<DrivingRecordPageGetResponse>> getDrivingRecords(
         Authentication authentication,
         @Parameter(example = "2026-02")
         @RequestParam(required = false) YearMonth yearMonth,
@@ -51,7 +51,7 @@ public class DrivingRecordController {
         @RequestParam(defaultValue = "10") int size
     ) {
         Long memberId = Long.parseLong(authentication.getName());
-        DrivingRecordPageResponse response = drivingRecordService.getDrivingRecords(memberId, yearMonth, cursor, size);
+        DrivingRecordPageGetResponse response = drivingRecordService.getDrivingRecords(memberId, yearMonth, cursor, size);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));
