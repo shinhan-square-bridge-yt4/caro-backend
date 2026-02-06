@@ -23,7 +23,7 @@ import today.caro.api.car.service.MemberCarService;
 @Tag(name = "My Car", description = "내 차량 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/my/car")
+@RequestMapping("/api/v1/cars")
 public class CarController {
 
     private final MemberCarService memberCarService;
