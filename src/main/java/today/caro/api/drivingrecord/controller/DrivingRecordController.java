@@ -21,6 +21,7 @@ import today.caro.api.config.SwaggerConstants;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateRequest;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateResponse;
 import today.caro.api.drivingrecord.dto.DrivingRecordPageGetResponse;
+import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.service.DrivingRecordService;
 
 import java.time.YearMonth;
@@ -78,6 +79,26 @@ public class DrivingRecordController {
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.CREATED, response));
+    }
+
+    @Operation(
+        summary = "운행 기록 요약 조회",
+        description = "운행 기록 요약을 조회합니다.",
+        security = @SecurityRequirement(name = SwaggerConstants.BEARER_SCHEME)
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요")
+    })
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<DrivingRecordSummaryGetResponse>> getSummary(
+        Authentication authentication
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        DrivingRecordSummaryGetResponse response = drivingRecordService.getSummary(memberId);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
     }
 
 }

@@ -8,7 +8,7 @@ import today.caro.api.drivingrecord.entity.DrivingRecord;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface DrivingRecordRepository extends JpaRepository<DrivingRecord, Long> {
+public interface DrivingRecordRepository extends JpaRepository<DrivingRecord, Long>, DrivingRecordRepositoryCustom {
 
     @Query("""
         SELECT dr FROM DrivingRecord dr

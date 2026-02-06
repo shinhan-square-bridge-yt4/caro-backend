@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.caro.api.common.exception.BusinessException;
 import today.caro.api.common.exception.ErrorCode;
-import today.caro.api.drivingrecord.dto.DrivingRecordCreateRequest;
-import today.caro.api.drivingrecord.dto.DrivingRecordCreateResponse;
-import today.caro.api.drivingrecord.dto.DrivingRecordGetResponse;
-import today.caro.api.drivingrecord.dto.DrivingRecordPageGetResponse;
+import today.caro.api.drivingrecord.dto.*;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.membercar.entity.MemberCar;
@@ -75,6 +72,11 @@ public class DrivingRecordService {
         DrivingRecord saved = drivingRecordRepository.save(record);
 
         return DrivingRecordCreateResponse.from(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public DrivingRecordSummaryGetResponse getSummary(Long memberId) {
+        return drivingRecordRepository.findSummaryByMemberId(memberId);
     }
 
 }
