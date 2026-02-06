@@ -20,7 +20,7 @@ import today.caro.api.car.dto.MemberCarRegisterRequest;
 import today.caro.api.car.dto.MemberCarRegisterResponse;
 import today.caro.api.car.service.MemberCarService;
 
-@Tag(name = "My Car", description = "내 차량 API")
+@Tag(name = "Car", description = "회원 차량 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/cars")

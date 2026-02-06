@@ -18,7 +18,7 @@ import today.caro.api.vehicle.service.VehicleService;
 
 import java.util.List;
 
-@Tag(name = "Vehicle", description = "차량 정보 API")
+@Tag(name = "Vehicle", description = "차량 카탈로그 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/vehicles")
