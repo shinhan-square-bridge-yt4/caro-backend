@@ -49,4 +49,10 @@ public class MemberCar {
         this.mileage = mileage != null ? mileage : 10000;
     }
 
+    public void updateRegistrationNumber(String registrationNumber) {
+        if (registrationNumber != null && !registrationNumber.isBlank()) {
+            this.registrationNumber = registrationNumber;
+        }
+    }
+
 }

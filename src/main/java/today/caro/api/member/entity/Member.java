@@ -41,4 +41,10 @@ public class Member {
         this.name = name;
     }
 
+    public void updateName(String name) {
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
+    }
+
 }

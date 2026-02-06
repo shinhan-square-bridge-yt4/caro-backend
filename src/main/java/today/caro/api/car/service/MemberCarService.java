@@ -53,4 +53,14 @@ public class MemberCarService {
             .toList();
     }
 
+    @Transactional
+    public void updateRegistrationNumber(Long memberId, Long carId, String registrationNumber) {
+        MemberCar car = memberCarRepository.findAllByMemberId(memberId).stream()
+            .filter(c -> c.getId().equals(carId))
+            .findFirst()
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_CAR_ACCESS_DENIED));
+
+        car.updateRegistrationNumber(registrationNumber);
+    }
+
 }
