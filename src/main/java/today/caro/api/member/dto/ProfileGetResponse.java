@@ -9,6 +9,7 @@ public record ProfileGetResponse(
     PrimaryCarInfo primaryCar
 ) {
     public record PrimaryCarInfo(
+        Long id,
         String brandName,
         String modelName,
         String variant,
@@ -16,6 +17,7 @@ public record ProfileGetResponse(
     ) {
         public static PrimaryCarInfo from(MemberCar car) {
             return new PrimaryCarInfo(
+                car.getId(),
                 car.getModel().getBrand().getName(),
                 car.getModel().getName(),
                 car.getModel().getVariant(),
