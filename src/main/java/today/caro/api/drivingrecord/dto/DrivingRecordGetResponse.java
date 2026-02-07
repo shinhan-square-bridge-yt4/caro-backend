@@ -11,6 +11,7 @@ public record DrivingRecordGetResponse(
     String distanceKm,
     String startLocation,
     String endLocation,
+    String vehicleBrandName,
     String vehicleModelName,
     String vehicleVariantName,
     int earnedPoints
@@ -24,6 +25,7 @@ public record DrivingRecordGetResponse(
             DrivingRecordFormatter.formatDistance(record.getDistanceKm()),
             record.getStartLocation(),
             record.getEndLocation(),
+            record.getMemberCar().getModel().getBrand().getName(),
             record.getMemberCar().getModel().getName(),
             record.getMemberCar().getModel().getVariant(),
             record.getEarnedPoints()
