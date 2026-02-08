@@ -22,7 +22,11 @@ public enum ErrorCode {
     MEMBER_CAR_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 차량에 대한 접근 권한이 없습니다."),
 
     EXPENSE_NOT_FOUND(HttpStatus.NOT_FOUND, "지출 내역을 찾을 수 없습니다."),
-    EXPENSE_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 지출 내역에 대한 접근 권한이 없습니다.");
+    EXPENSE_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 지출 내역에 대한 접근 권한이 없습니다."),
+
+    REWARD_COUPON_NOT_FOUND(HttpStatus.NOT_FOUND, "교환권을 찾을 수 없습니다."),
+
+    INSUFFICIENT_POINTS(HttpStatus.BAD_REQUEST, "포인트가 부족합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
