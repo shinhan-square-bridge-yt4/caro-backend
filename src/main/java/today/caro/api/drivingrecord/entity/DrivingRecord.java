@@ -38,7 +38,7 @@ public class DrivingRecord {
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    @Column(nullable = false, precision = 10, scale = 3)
+    @Column(nullable = false, precision = 15, scale = 3)
     private BigDecimal distanceKm;
 
     @Column(nullable = false)
