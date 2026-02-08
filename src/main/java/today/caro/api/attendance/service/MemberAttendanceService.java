@@ -1,9 +1,11 @@
 package today.caro.api.attendance.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.caro.api.attendance.dto.MemberAttendResponse;
+import today.caro.api.attendance.dto.MemberAttendanceStatusGetResponse;
 import today.caro.api.attendance.entity.MemberAttendance;
 import today.caro.api.attendance.repository.MemberAttendanceRepository;
 import today.caro.api.common.exception.BusinessException;
@@ -12,6 +14,8 @@ import today.caro.api.member.entity.Member;
 import today.caro.api.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -71,6 +75,47 @@ public class MemberAttendanceService {
         MemberAttendance createdAttendance = memberAttendanceRepository.save(attendance);
 
         return MemberAttendResponse.from(createdAttendance);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberAttendanceStatusGetResponse getAttendanceStatus(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        LocalDate today = LocalDate.now();
+
+        // 가장 최근 출석 기록 조회
+        MemberAttendance lastAttendance = memberAttendanceRepository
+            .findTopByMemberOrderByAttendanceDateDesc(member)
+            .orElse(null);
+
+        // 스트릭이 없거나 깨진 경우 조기 반환
+        if (lastAttendance == null ||
+            (!lastAttendance.getAttendanceDate().isEqual(today) &&
+                !lastAttendance.getAttendanceDate().isEqual(today.minusDays(1)))) {
+            return new MemberAttendanceStatusGetResponse(0, false, List.of());
+        }
+
+        int currentStreak = lastAttendance.getStreak();
+        boolean isAttendedToday = lastAttendance.getAttendanceDate().isEqual(today);
+
+        // 현재 스트릭에 해당하는 최근 출석 기록 리스트 조회
+        List<MemberAttendance> streakRecords = memberAttendanceRepository
+            .findRecentStreakRecords(member, PageRequest.of(0, currentStreak));
+
+        // DTO 변환 및 정렬
+        List<MemberAttendanceStatusGetResponse.MemberAttendanceGetResponse> attendanceRecords = streakRecords.stream()
+            .map(a -> new MemberAttendanceStatusGetResponse.MemberAttendanceGetResponse(
+                a.getStreak(),
+                a.getAttendanceDate(),
+                a.getPoints()
+            ))
+            .sorted(Comparator.comparing(
+                MemberAttendanceStatusGetResponse.MemberAttendanceGetResponse::dayOrder
+            ))
+            .toList();
+
+        return new MemberAttendanceStatusGetResponse(currentStreak, isAttendedToday, attendanceRecords);
     }
 
 }
