@@ -1,4 +1,4 @@
-package today.caro.api.reward.entity;
+package today.caro.api.reward.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

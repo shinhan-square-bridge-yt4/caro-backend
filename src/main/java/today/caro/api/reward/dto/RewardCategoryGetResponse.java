@@ -1,6 +1,6 @@
 package today.caro.api.reward.dto;
 
-import today.caro.api.reward.entity.RewardCategory;
+import today.caro.api.reward.type.RewardCategory;
 
 public record RewardCategoryGetResponse(
     String category,
