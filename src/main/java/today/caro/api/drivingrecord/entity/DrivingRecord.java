@@ -7,13 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import today.caro.api.member.entity.Member;
 import today.caro.api.car.entity.MemberCar;
+import today.caro.api.member.entity.Member;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "driving_record")
@@ -35,15 +33,12 @@ public class DrivingRecord {
     private MemberCar memberCar;
 
     @Column(nullable = false)
-    private LocalDate driveDate;
+    private LocalDateTime startDateTime;
 
     @Column(nullable = false)
-    private LocalTime startTime;
+    private LocalDateTime endDateTime;
 
-    @Column(nullable = false)
-    private LocalTime endTime;
-
-    @Column(nullable = false, precision = 10, scale = 1)
+    @Column(nullable = false, precision = 10, scale = 3)
     private BigDecimal distanceKm;
 
     @Column(nullable = false)
@@ -63,9 +58,8 @@ public class DrivingRecord {
     public DrivingRecord(
         Member member,
         MemberCar memberCar,
-        LocalDate driveDate,
-        LocalTime startTime,
-        LocalTime endTime,
+        LocalDateTime startDateTime,
+        LocalDateTime endDateTime,
         BigDecimal distanceKm,
         String startLocation,
         String endLocation,
@@ -73,9 +67,8 @@ public class DrivingRecord {
     ) {
         this.member = member;
         this.memberCar = memberCar;
-        this.driveDate = driveDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.distanceKm = distanceKm;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
