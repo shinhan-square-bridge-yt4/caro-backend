@@ -15,6 +15,7 @@ import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
 import today.caro.api.coupon.dto.MemberCouponCreateRequest;
 import today.caro.api.coupon.dto.MemberCouponCreateResponse;
+import today.caro.api.coupon.dto.MemberCouponDetailGetResponse;
 import today.caro.api.coupon.dto.MemberCouponListGetResponse;
 import today.caro.api.coupon.service.MemberCouponService;
 
@@ -66,6 +67,30 @@ public class MemberCouponController {
     ) {
         Long memberId = Long.parseLong(authentication.getName());
         MemberCouponListGetResponse response = memberCouponService.getMyCoupons(memberId);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
+    }
+
+    @Operation(
+        summary = "보유 쿠폰 상세 조회",
+        description = "현재 사용자가 보유한 쿠폰의 상세 정보를 조회합니다.",
+        security = @SecurityRequirement(name = SwaggerConstants.BEARER_SCHEME)
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "접근 권한 없음"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "리소스를 찾을 수 없음")
+    })
+    @GetMapping("/{member-coupon-id}")
+    public ResponseEntity<ApiResponse<MemberCouponDetailGetResponse>> getMyCouponDetail(
+        Authentication authentication,
+        @PathVariable(name = "member-coupon-id") Long memberCouponId
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        MemberCouponDetailGetResponse response = memberCouponService.getMyCouponDetail(memberId, memberCouponId);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

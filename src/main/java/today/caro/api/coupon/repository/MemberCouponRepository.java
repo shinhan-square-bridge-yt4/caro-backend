@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import today.caro.api.coupon.entity.MemberCoupon;
 
+import java.util.Optional;
+
 public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long>, MemberCouponRepositoryCustom {
 
     @Query("""
@@ -13,5 +15,14 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
         WHERE mc.member.id = :memberId
     """)
     long findTotalUsedPointsByMemberId(@Param("memberId") Long memberId);
+
+    @Query("""
+        SELECT mc
+        FROM MemberCoupon mc
+        JOIN FETCH mc.rewardCoupon rc
+        JOIN FETCH rc.brand
+        WHERE mc.id = :id
+    """)
+    Optional<MemberCoupon> findWithRewardCouponAndBrandById(@Param("id") Long id);
 
 }

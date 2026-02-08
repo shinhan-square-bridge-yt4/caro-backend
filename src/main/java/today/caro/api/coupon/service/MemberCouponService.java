@@ -5,15 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.caro.api.common.exception.BusinessException;
 import today.caro.api.common.exception.ErrorCode;
-import today.caro.api.coupon.dto.MemberCouponGetResponse;
-import today.caro.api.coupon.dto.MemberCouponListGetResponse;
+import today.caro.api.coupon.dto.*;
 import today.caro.api.coupon.util.BarcodeNumberGenerator;
 import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.member.entity.Member;
 import today.caro.api.member.repository.MemberRepository;
-import today.caro.api.coupon.dto.MemberCouponCreateRequest;
-import today.caro.api.coupon.dto.MemberCouponCreateResponse;
 import today.caro.api.coupon.entity.MemberCoupon;
 import today.caro.api.coupon.repository.MemberCouponRepository;
 import today.caro.api.reward.entity.RewardCoupon;
@@ -68,6 +65,27 @@ public class MemberCouponService {
     public MemberCouponListGetResponse getMyCoupons(Long memberId) {
         List<MemberCouponGetResponse> coupons = memberCouponRepository.findActiveCouponsByMemberId(memberId);
         return new MemberCouponListGetResponse(coupons.size(), coupons);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberCouponDetailGetResponse getMyCouponDetail(Long memberId, Long memberCouponId) {
+        MemberCoupon memberCoupon = memberCouponRepository.findWithRewardCouponAndBrandById(memberCouponId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_COUPON_NOT_FOUND));
+
+        if (!memberCoupon.getMember().getId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.MEMBER_COUPON_ACCESS_DENIED);
+        }
+
+        RewardCoupon rewardCoupon = memberCoupon.getRewardCoupon();
+
+        return new MemberCouponDetailGetResponse(
+            rewardCoupon.getBrand().getName(),
+            rewardCoupon.getItemName(),
+            memberCoupon.getBarcodeNumber(),
+            memberCoupon.getExpiredAt(),
+            memberCoupon.getCreatedAt(),
+            rewardCoupon.getImageUrl()
+        );
     }
 
 }
