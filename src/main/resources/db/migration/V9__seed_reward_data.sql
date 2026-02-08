@@ -39,7 +39,7 @@ INSERT INTO reward_coupon (reward_brand_id, item_name, required_points, image_ur
 INSERT INTO reward_coupon (reward_brand_id, item_name, required_points, image_url, redeem_count, created_at) VALUES
 (4, '아메리카노 R 사이즈 모바일 교환권', 5000, '/images/rewards/dummy.jpg', 32, NOW()),
 (4, '카페라떼 R 사이즈 모바일 교환권', 5800, '/images/rewards/dummy.jpg', 51, NOW()),
-(4, '조각 케이크 1종 모바일 교환권', 11500, '/images/rewards/dummy.jpg', 17 NOW()),
+(4, '조각 케이크 1종 모바일 교환권', 11500, '/images/rewards/dummy.jpg', 17, NOW()),
 (4, '홀케이크 모바일 교환권', 22000, '/images/rewards/dummy.jpg', 9, NOW()),
 (4, '모바일 기프트 카드 1만원권', 13000, '/images/rewards/dummy.jpg', 15, NOW());
 
