@@ -13,13 +13,16 @@ import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.point.dto.DrivingDetail;
+import today.caro.api.point.dto.EstimatedPointGetResponse;
 import today.caro.api.point.dto.MemberPointGetResponse;
 import today.caro.api.point.dto.PendingPointGetResponse;
 import today.caro.api.point.dto.PointClaimResponse;
 import today.caro.api.point.dto.PointHistoryGetResponse;
 import today.caro.api.point.dto.PointHistoryListGetResponse;
+import today.caro.api.point.policy.PointCalculationPolicy;
 import today.caro.api.point.repository.PointHistoryRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +35,7 @@ public class PointHistoryService {
     private final MemberAttendanceRepository memberAttendanceRepository;
     private final DrivingRecordRepository drivingRecordRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final PointCalculationPolicy pointCalculationPolicy;
 
     @Transactional(readOnly = true)
     public PointHistoryListGetResponse getPointHistory(Long memberId) {
@@ -98,6 +102,11 @@ public class PointHistoryService {
         int remainingCount = pendingRecords.size() - 1;
 
         return new PointClaimResponse(oldest.getEarnedPoints(), remainingCount);
+    }
+
+    public EstimatedPointGetResponse estimatePoints(BigDecimal distanceKm) {
+        int estimatedPoints = pointCalculationPolicy.calculate(distanceKm);
+        return new EstimatedPointGetResponse(distanceKm, estimatedPoints);
     }
 
 }

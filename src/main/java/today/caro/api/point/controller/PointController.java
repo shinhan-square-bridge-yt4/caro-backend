@@ -1,5 +1,7 @@
 package today.caro.api.point.controller;
 
+import java.math.BigDecimal;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -10,10 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.caro.api.common.dto.ApiResponse;
 import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
+import today.caro.api.point.dto.EstimatedPointGetResponse;
 import today.caro.api.point.dto.MemberPointGetResponse;
 import today.caro.api.point.dto.PendingPointGetResponse;
 import today.caro.api.point.dto.PointClaimResponse;
@@ -104,6 +108,24 @@ public class PointController {
     ) {
         Long memberId = Long.parseLong(authentication.getName());
         PointClaimResponse response = pointHistoryService.claimOldestPendingPoints(memberId);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
+    }
+
+    @Operation(
+        summary = "예상 적립 포인트 계산",
+        description = "주행 거리(km)를 입력하면 예상 적립 포인트를 계산해 반환합니다."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    @GetMapping("/estimate")
+    public ResponseEntity<ApiResponse<EstimatedPointGetResponse>> getEstimatedPoints(
+        @RequestParam BigDecimal distanceKm
+    ) {
+        EstimatedPointGetResponse response = pointHistoryService.estimatePoints(distanceKm);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

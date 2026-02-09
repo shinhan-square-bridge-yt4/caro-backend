@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/vehicles/**").permitAll()
                 .requestMatchers("/api/v1/expenses/categories").permitAll()
                 .requestMatchers("/api/v1/rewards/**").permitAll()
+                .requestMatchers("/api/v1/members/points/estimate").permitAll()
                 .requestMatchers("/images/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
