@@ -54,7 +54,7 @@ public class DrivingRecordService {
             throw new BusinessException(ErrorCode.MEMBER_CAR_ACCESS_DENIED);
         }
 
-        int earnedPoints = pointCalculationPolicy.calculate(request.distanceKm());
+        int pendingPoints = pointCalculationPolicy.calculate(request.distanceKm());
 
         DrivingRecord record = DrivingRecord.builder()
             .member(memberCar.getMember())
@@ -64,7 +64,9 @@ public class DrivingRecordService {
             .distanceKm(request.distanceKm())
             .startLocation(request.startLocation())
             .endLocation(request.endLocation())
-            .earnedPoints(earnedPoints)
+            .earnedPoints(0)
+            .pendingPoints(pendingPoints)
+            .pointsClaimed(false)
             .build();
 
         DrivingRecord saved = drivingRecordRepository.save(record);
