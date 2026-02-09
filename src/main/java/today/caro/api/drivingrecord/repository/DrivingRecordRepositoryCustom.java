@@ -14,4 +14,6 @@ public interface DrivingRecordRepositoryCustom {
         Long memberId, LocalDateTime start, LocalDateTime end, Long cursor, int size
     );
 
+    long countByMemberAndMonth(Long memberId, LocalDateTime start, LocalDateTime end);
+
 }

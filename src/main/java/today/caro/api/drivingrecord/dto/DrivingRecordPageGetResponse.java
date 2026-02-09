@@ -5,15 +5,18 @@ import java.util.List;
 public record DrivingRecordPageGetResponse(
     List<DrivingRecordGetResponse> records,
     Long nextCursor,
-    boolean hasNext
+    boolean hasNext,
+    long monthlyCount
 ) {
-    public static DrivingRecordPageGetResponse of(List<DrivingRecordGetResponse> records, int requestedSize) {
+    public static DrivingRecordPageGetResponse of(
+        List<DrivingRecordGetResponse> records, int requestedSize, long monthlyCount
+    ) {
         boolean hasNext = records.size() == requestedSize;
 
         Long nextCursor = hasNext && !records.isEmpty()
             ? records.get(records.size() - 1).id()
             : null;
 
-        return new DrivingRecordPageGetResponse(records, nextCursor, hasNext);
+        return new DrivingRecordPageGetResponse(records, nextCursor, hasNext, monthlyCount);
     }
 }

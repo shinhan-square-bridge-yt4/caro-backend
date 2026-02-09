@@ -35,11 +35,14 @@ public class DrivingRecordService {
         // 운행 기록 리스트 조회
         List<DrivingRecord> records = drivingRecordRepository.findByMemberAndMonth(memberId, start, end, cursor, size);
 
+        // 해당 월 기준 운행 기록 개수 조회
+        long monthlyCount = drivingRecordRepository.countByMemberAndMonth(memberId, start, end);
+
         List<DrivingRecordGetResponse> responseList = records.stream()
             .map(DrivingRecordGetResponse::from)
             .toList();
 
-        return DrivingRecordPageGetResponse.of(responseList, size);
+        return DrivingRecordPageGetResponse.of(responseList, size, monthlyCount);
     }
 
     @Transactional

@@ -48,6 +48,17 @@ public class DrivingRecordRepositoryImpl implements DrivingRecordRepositoryCusto
             .fetch();
     }
 
+    @Override
+    public long countByMemberAndMonth(Long memberId, LocalDateTime start, LocalDateTime end) {
+        Long count = queryFactory
+            .select(drivingRecord.count())
+            .from(drivingRecord)
+            .where(commonConditions(memberId, start, end)) // 동일한 조건 사용
+            .fetchOne();
+
+        return count != null ? count : 0L;
+    }
+
     private BooleanBuilder commonConditions(Long memberId, LocalDateTime start, LocalDateTime end) {
         return new BooleanBuilder()
             .and(drivingRecord.member.id.eq(memberId))
