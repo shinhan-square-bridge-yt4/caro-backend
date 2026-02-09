@@ -20,8 +20,7 @@ public class DrivingRecordRepositoryImpl implements DrivingRecordRepositoryCusto
         return queryFactory
             .select(Projections.constructor(DrivingRecordSummaryGetResponse.class,
                 drivingRecord.distanceKm.sum().coalesce(BigDecimal.ZERO),
-                drivingRecord.earnedPoints.sum().coalesce(0).longValue(),
-                drivingRecord.count()
+                drivingRecord.earnedPoints.sum().coalesce(0).longValue()
             ))
             .from(drivingRecord)
             .where(drivingRecord.member.id.eq(memberId))
