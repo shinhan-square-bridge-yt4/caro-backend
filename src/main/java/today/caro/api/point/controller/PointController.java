@@ -14,6 +14,7 @@ import today.caro.api.common.dto.ApiResponse;
 import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
 import today.caro.api.point.dto.MemberPointGetResponse;
+import today.caro.api.point.dto.PendingPointGetResponse;
 import today.caro.api.point.dto.PointHistoryListGetResponse;
 import today.caro.api.point.service.PointHistoryService;
 
@@ -60,6 +61,26 @@ public class PointController {
     ) {
         Long memberId = Long.parseLong(authentication.getName());
         MemberPointGetResponse response = pointHistoryService.getPoints(memberId);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
+    }
+
+    @Operation(
+        summary = "미수령 운행 포인트 현황 조회",
+        description = "현재 사용자의 미수령 운행 포인트 현황을 조회합니다.",
+        security = @SecurityRequirement(name = SwaggerConstants.BEARER_SCHEME)
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요")
+    })
+    @GetMapping("/pending")
+    public ResponseEntity<ApiResponse<PendingPointGetResponse>> getPendingPoints(
+        Authentication authentication
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        PendingPointGetResponse response = pointHistoryService.getPendingPoints(memberId);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

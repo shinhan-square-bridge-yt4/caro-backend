@@ -10,10 +10,7 @@ import today.caro.api.coupon.repository.MemberCouponRepository;
 import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
-import today.caro.api.point.dto.DrivingDetail;
-import today.caro.api.point.dto.MemberPointGetResponse;
-import today.caro.api.point.dto.PointHistoryGetResponse;
-import today.caro.api.point.dto.PointHistoryListGetResponse;
+import today.caro.api.point.dto.*;
 import today.caro.api.point.repository.PointHistoryRepository;
 
 import java.util.ArrayList;
@@ -67,6 +64,17 @@ public class PointHistoryService {
         return new MemberPointGetResponse(
             totalAttendancePoints, totalDrivingPoints, totalUsedPoints, availablePoints
         );
+    }
+
+    @Transactional(readOnly = true)
+    public PendingPointGetResponse getPendingPoints(Long memberId) {
+        List<DrivingRecord> pendingRecords = drivingRecordRepository.findPendingByMemberId(memberId);
+
+        int totalPendingPoints = pendingRecords.stream()
+            .mapToInt(DrivingRecord::getPendingPoints)
+            .sum();
+
+        return new PendingPointGetResponse(totalPendingPoints);
     }
 
 }

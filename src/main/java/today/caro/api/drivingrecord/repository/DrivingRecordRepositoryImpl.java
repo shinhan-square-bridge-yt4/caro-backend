@@ -7,6 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -57,6 +58,21 @@ public class DrivingRecordRepositoryImpl implements DrivingRecordRepositoryCusto
             .fetchOne();
 
         return count != null ? count : 0L;
+    }
+
+    @Override
+    public List<DrivingRecord> findPendingByMemberId(Long memberId) {
+        LocalDateTime deadlineCutoff = LocalDate.now().atStartOfDay(); // 오늘 자정
+
+        return queryFactory
+            .selectFrom(drivingRecord)
+            .where(
+                drivingRecord.member.id.eq(memberId),
+                drivingRecord.pointsClaimed.isFalse(), // 포인트를 수령하지 않은 기록만
+                drivingRecord.endDateTime.goe(deadlineCutoff) // 오늘 자정 이후 운행 종료된 기록만
+            )
+            .orderBy(drivingRecord.endDateTime.asc()) // 운행 종료 시간 기준 오름차순 정렬
+            .fetch();
     }
 
     private BooleanBuilder commonConditions(Long memberId, LocalDateTime start, LocalDateTime end) {

@@ -16,4 +16,6 @@ public interface DrivingRecordRepositoryCustom {
 
     long countByMemberAndMonth(Long memberId, LocalDateTime start, LocalDateTime end);
 
+    List<DrivingRecord> findPendingByMemberId(Long memberId);
+
 }
