@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import today.caro.api.common.dto.ApiResponse;
 import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
+import today.caro.api.point.dto.MemberPointGetResponse;
 import today.caro.api.point.dto.PointHistoryListGetResponse;
 import today.caro.api.point.service.PointHistoryService;
 
@@ -20,7 +21,7 @@ import today.caro.api.point.service.PointHistoryService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members/points")
-public class PointHistoryController {
+public class PointController {
 
     private final PointHistoryService pointHistoryService;
 
@@ -39,6 +40,26 @@ public class PointHistoryController {
     ) {
         Long memberId = Long.parseLong(authentication.getName());
         PointHistoryListGetResponse response = pointHistoryService.getPointHistory(memberId);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
+    }
+
+    @Operation(
+        summary = "보유 포인트 조회",
+        description = "현재 사용자의 출석, 운행, 사용 누적 포인트 및 가용 포인트를 조회합니다.",
+        security = @SecurityRequirement(name = SwaggerConstants.BEARER_SCHEME)
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요")
+    })
+    @GetMapping
+    public ResponseEntity<ApiResponse<MemberPointGetResponse>> getPoints(
+        Authentication authentication
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        MemberPointGetResponse response = pointHistoryService.getPoints(memberId);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));

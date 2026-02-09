@@ -25,4 +25,11 @@ public interface MemberAttendanceRepository extends JpaRepository<MemberAttendan
     """)
     List<MemberAttendance> findRecentStreakRecords(@Param("member") Member member, Pageable pageable);
 
+    @Query("""
+        SELECT COALESCE(SUM(ma.points), 0)
+        FROM MemberAttendance ma
+        WHERE ma.member.id = :memberId
+    """)
+    long findTotalPointsByMemberId(@Param("memberId") Long memberId);
+
 }

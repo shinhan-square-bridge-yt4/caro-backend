@@ -4,9 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.caro.api.attendance.entity.MemberAttendance;
+import today.caro.api.attendance.repository.MemberAttendanceRepository;
 import today.caro.api.coupon.entity.MemberCoupon;
+import today.caro.api.coupon.repository.MemberCouponRepository;
+import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.entity.DrivingRecord;
+import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.point.dto.DrivingDetail;
+import today.caro.api.point.dto.MemberPointGetResponse;
 import today.caro.api.point.dto.PointHistoryGetResponse;
 import today.caro.api.point.dto.PointHistoryListGetResponse;
 import today.caro.api.point.repository.PointHistoryRepository;
@@ -20,6 +25,9 @@ import java.util.List;
 public class PointHistoryService {
 
     private final PointHistoryRepository pointHistoryRepository;
+    private final MemberAttendanceRepository memberAttendanceRepository;
+    private final DrivingRecordRepository drivingRecordRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
     @Transactional(readOnly = true)
     public PointHistoryListGetResponse getPointHistory(Long memberId) {
@@ -45,6 +53,20 @@ public class PointHistoryService {
         histories.sort(Comparator.comparing(PointHistoryGetResponse::date).reversed());
 
         return new PointHistoryListGetResponse(histories.size(), histories);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointGetResponse getPoints(Long memberId) {
+        DrivingRecordSummaryGetResponse summary = drivingRecordRepository.findSummaryByMemberId(memberId);
+
+        long totalAttendancePoints = memberAttendanceRepository.findTotalPointsByMemberId(memberId);
+        long totalDrivingPoints = summary.totalEarnedPoints();
+        long totalUsedPoints = memberCouponRepository.findTotalUsedPointsByMemberId(memberId);
+        long availablePoints = totalAttendancePoints + totalDrivingPoints - totalUsedPoints;
+
+        return new MemberPointGetResponse(
+            totalAttendancePoints, totalDrivingPoints, totalUsedPoints, availablePoints
+        );
     }
 
 }
