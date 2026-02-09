@@ -30,7 +30,10 @@ public class PointHistoryRepository {
             .join(drivingRecord.memberCar, memberCar).fetchJoin()
             .join(memberCar.model, carModel).fetchJoin()
             .join(carModel.brand, carBrand).fetchJoin()
-            .where(drivingRecord.member.id.eq(memberId))
+            .where(
+                drivingRecord.member.id.eq(memberId),
+                drivingRecord.pointsClaimed.isTrue()
+            )
             .orderBy(drivingRecord.createdAt.desc())
             .fetch();
     }
