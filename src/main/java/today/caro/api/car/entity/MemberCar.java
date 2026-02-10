@@ -37,6 +37,9 @@ public class MemberCar {
     @Column(nullable = false)
     private Integer mileage;
 
+    @Column(name = "is_primary", nullable = false)
+    private boolean isPrimary = false;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -47,6 +50,10 @@ public class MemberCar {
         this.model = model;
         this.registrationNumber = registrationNumber;
         this.mileage = mileage != null ? mileage : 10000;
+    }
+
+    public void setPrimary(boolean isPrimary) {
+        this.isPrimary = isPrimary;
     }
 
     public void updateRegistrationNumber(String registrationNumber) {
