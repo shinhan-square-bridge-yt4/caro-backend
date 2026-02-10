@@ -14,6 +14,7 @@ import today.caro.api.member.entity.Member;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "driving_record")
@@ -58,6 +59,10 @@ public class DrivingRecord {
     @Column(nullable = false)
     private Boolean pointsClaimed;
 
+    @Convert(converter = RouteCoordinateConverter.class)
+    @Column(columnDefinition = "JSON")
+    private List<RouteCoordinate> routeCoordinates;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -73,7 +78,8 @@ public class DrivingRecord {
         String endLocation,
         Integer earnedPoints,
         Integer pendingPoints,
-        Boolean pointsClaimed
+        Boolean pointsClaimed,
+        List<RouteCoordinate> routeCoordinates
     ) {
         this.member = member;
         this.memberCar = memberCar;
@@ -85,6 +91,7 @@ public class DrivingRecord {
         this.earnedPoints = earnedPoints;
         this.pendingPoints = pendingPoints;
         this.pointsClaimed = pointsClaimed;
+        this.routeCoordinates = routeCoordinates;
     }
 
     public void claimPoints() {
