@@ -84,6 +84,18 @@ public class DrivingRecordService {
     }
 
     @Transactional(readOnly = true)
+    public DrivingRecordDetailGetResponse getDrivingRecord(Long memberId, Long drivingRecordId) {
+        DrivingRecord record = drivingRecordRepository.findById(drivingRecordId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.DRIVING_RECORD_NOT_FOUND));
+
+        if (!record.getMember().getId().equals(memberId)) {
+            throw new BusinessException(ErrorCode.DRIVING_RECORD_ACCESS_DENIED);
+        }
+
+        return DrivingRecordDetailGetResponse.from(record);
+    }
+
+    @Transactional(readOnly = true)
     public DrivingRecordSummaryGetResponse getSummary(Long memberId) {
         return drivingRecordRepository.findSummaryByMemberId(memberId);
     }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import today.caro.api.common.dto.SuccessCode;
 import today.caro.api.config.SwaggerConstants;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateRequest;
 import today.caro.api.drivingrecord.dto.DrivingRecordCreateResponse;
+import today.caro.api.drivingrecord.dto.DrivingRecordDetailGetResponse;
 import today.caro.api.drivingrecord.dto.DrivingRecordPageGetResponse;
 import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.dto.DrivingRecordTodayGetResponse;
@@ -54,6 +56,29 @@ public class DrivingRecordController {
     ) {
         Long memberId = Long.parseLong(authentication.getName());
         DrivingRecordPageGetResponse response = drivingRecordService.getDrivingRecords(memberId, yearMonth, cursor, size);
+
+        return ResponseEntity
+            .ok(ApiResponse.success(SuccessCode.OK, response));
+    }
+
+    @Operation(
+        summary = "운행 기록 상세 조회",
+        description = "운행 기록의 상세 정보를 조회합니다.",
+        security = @SecurityRequirement(name = SwaggerConstants.BEARER_SCHEME)
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 필요"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "접근 권한 없음"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "리소스를 찾을 수 없음")
+    })
+    @GetMapping("/{driving-record-id}")
+    public ResponseEntity<ApiResponse<DrivingRecordDetailGetResponse>> getDrivingRecord(
+        Authentication authentication,
+        @PathVariable(name = "driving-record-id") Long drivingRecordId
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        DrivingRecordDetailGetResponse response = drivingRecordService.getDrivingRecord(memberId, drivingRecordId);
 
         return ResponseEntity
             .ok(ApiResponse.success(SuccessCode.OK, response));
