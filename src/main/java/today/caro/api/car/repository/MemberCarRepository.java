@@ -14,7 +14,7 @@ public interface MemberCarRepository extends JpaRepository<MemberCar, Long> {
         SELECT mc
         FROM MemberCar mc
         WHERE mc.member.id = :memberId
-        ORDER BY mc.createdAt ASC
+        ORDER BY mc.isPrimary DESC, mc.createdAt ASC
         LIMIT 1
     """)
     Optional<MemberCar> findFirstByMemberId(@Param("memberId") Long memberId);
@@ -23,7 +23,7 @@ public interface MemberCarRepository extends JpaRepository<MemberCar, Long> {
         SELECT mc
         FROM MemberCar mc
         WHERE mc.member.id = :memberId
-        ORDER BY mc.createdAt ASC
+        ORDER BY mc.isPrimary DESC, mc.createdAt ASC
     """)
     List<MemberCar> findAllByMemberId(@Param("memberId") Long memberId);
 
