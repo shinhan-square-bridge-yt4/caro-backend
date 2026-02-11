@@ -6,13 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import today.caro.api.common.exception.BusinessException;
 import today.caro.api.common.exception.ErrorCode;
 import today.caro.api.coupon.dto.*;
+import today.caro.api.coupon.entity.MemberCoupon;
+import today.caro.api.coupon.repository.MemberCouponRepository;
 import today.caro.api.coupon.util.BarcodeNumberGenerator;
-import today.caro.api.drivingrecord.dto.DrivingRecordSummaryGetResponse;
 import today.caro.api.drivingrecord.repository.DrivingRecordRepository;
 import today.caro.api.member.entity.Member;
 import today.caro.api.member.repository.MemberRepository;
-import today.caro.api.coupon.entity.MemberCoupon;
-import today.caro.api.coupon.repository.MemberCouponRepository;
+import today.caro.api.point.dto.MemberPointGetResponse;
+import today.caro.api.point.service.PointHistoryService;
 import today.caro.api.reward.entity.RewardCoupon;
 import today.caro.api.reward.repository.RewardCouponRepository;
 
@@ -27,6 +28,7 @@ public class MemberCouponService {
     private final RewardCouponRepository rewardCouponRepository;
     private final MemberCouponRepository memberCouponRepository;
     private final DrivingRecordRepository drivingRecordRepository;
+    private final PointHistoryService pointHistoryService;
 
     @Transactional
     public MemberCouponCreateResponse createMemberCoupon(Long memberId, MemberCouponCreateRequest request) {
@@ -36,11 +38,8 @@ public class MemberCouponService {
         RewardCoupon rewardCoupon = rewardCouponRepository.findById(request.rewardCouponId())
             .orElseThrow(() -> new BusinessException(ErrorCode.REWARD_COUPON_NOT_FOUND));
 
-        DrivingRecordSummaryGetResponse summary = drivingRecordRepository.findSummaryByMemberId(memberId);
-
-        long totalEarnedPoints = summary.totalEarnedPoints();
-        long totalUsedPoints = memberCouponRepository.findTotalUsedPointsByMemberId(memberId);
-        long availablePoints = totalEarnedPoints - totalUsedPoints;
+        MemberPointGetResponse response = pointHistoryService.getPoints(memberId);
+        long availablePoints = response.availablePoints();
 
         if (availablePoints < rewardCoupon.getRequiredPoints()) {
             throw new BusinessException(ErrorCode.INSUFFICIENT_POINTS);
