@@ -25,7 +25,7 @@ api:
   server:
     url: https://api.caro.today
   cors:
-    allowed-origins: https://caro.today,https://api.caro.today,https://caro-frontend-sigma.vercel.app
+    allowed-origins: http://localhost:8081,https://caro.today,https://api.caro.today,https://caro-frontend-sigma.vercel.app
 
 jwt:
   secret: ${JWT_SECRET}
